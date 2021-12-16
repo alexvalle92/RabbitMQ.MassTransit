@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.MassTransit.Api.Consumers;
+using RabbitMQ.MassTransit.Api.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +48,16 @@ namespace RabbitMQ.MassTransit.Api
 
             services.AddMassTransit(bus =>
             {
+                bus.AddConsumer<EventConsumer>();
+
                 bus.UsingRabbitMq((ctx, busConfigurator) =>
                 {
                     busConfigurator.Host(Configuration.GetConnectionString("RabbitMq"));
+
+                    busConfigurator.ReceiveEndpoint("event-listener", e =>
+                    {
+                        e.ConfigureConsumer<EventConsumer>(ctx);
+                    });
                 });
             });
             services.AddMassTransitHostedService();
