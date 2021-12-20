@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using RabbitMQ.MassTransit.Api.Interfaces;
+using RabbitMQ.MassTransit.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +10,19 @@ namespace RabbitMQ.MassTransit.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class CustomerController : ControllerBase
     {
         readonly IPublishEndpoint _publishEndpoint;
 
-        public ClientesController(IPublishEndpoint publishEndpoint)
+        public CustomerController(IPublishEndpoint publishEndpoint)
         {
             _publishEndpoint = publishEndpoint;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarCliente(string nomeCliente)
+        public async Task<IActionResult> AddCustomer(CustomerModel customer)
         {
-            await _publishEndpoint.Publish<ICliente>(new
-            {
-                Value = "Alexandre"
-            });
+            await _publishEndpoint.Publish<CustomerModel>(customer);
             return Ok();
         }
     }
