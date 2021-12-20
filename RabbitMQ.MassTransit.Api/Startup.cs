@@ -1,3 +1,4 @@
+using GreenPipes;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -67,6 +68,8 @@ namespace RabbitMQ.MassTransit.Api
 
                     busConfigurator.ReceiveEndpoint("addProductQueue", e =>
                     {
+                        e.PrefetchCount = 10;
+                        e.UseMessageRetry(r => r.Interval(2, 5000));
                         e.ConfigureConsumer<AddProductConsumer>(ctx);
                     });
 
