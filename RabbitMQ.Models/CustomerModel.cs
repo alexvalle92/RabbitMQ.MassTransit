@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace RabbitMQ.MassTransit.Api.Models
+namespace RabbitMQ.Models
 {
     public class CustomerModel
     {

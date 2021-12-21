@@ -11,7 +11,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using RabbitMQ.MassTransit.Api.Consumers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,25 +57,9 @@ namespace RabbitMQ.MassTransit.Api
 
             services.AddMassTransit(bus =>
             {
-                bus.AddConsumer<AddCustomerConsumer>();
-                bus.AddConsumer<SendMailConsumer>();
-                bus.AddConsumer<AddProductConsumer>();
-
                 bus.UsingRabbitMq((ctx, busConfigurator) =>
                 {
                     busConfigurator.Host(Configuration.GetConnectionString("RabbitMq"));
-
-                    busConfigurator.ReceiveEndpoint("addProductQueue", e =>
-                    {
-                        e.PrefetchCount = 10;
-                        e.UseMessageRetry(r => r.Interval(2, 5000));
-                        e.ConfigureConsumer<AddProductConsumer>(ctx);
-                    });
-
-                    busConfigurator.ReceiveEndpoint("sendMailQueue", e =>
-                    {
-                        e.ConfigureConsumer<SendMailConsumer>(ctx);
-                    });
                 });
             });
             services.AddMassTransitHostedService();

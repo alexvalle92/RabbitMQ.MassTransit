@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using RabbitMQ.MassTransit.Api.Models;
+using RabbitMQ.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
